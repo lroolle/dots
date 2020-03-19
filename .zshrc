@@ -68,7 +68,13 @@ ZSH_THEME="random"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+
+# zsh-completions: https://github.com/zsh-users/zsh-completions
+plugins=(
+    git
+    zsh-completions
+)
+autoload -U compinit && compinit
 
 source $ZSH/oh-my-zsh.sh
 
@@ -100,11 +106,10 @@ source $ZSH/oh-my-zsh.sh
 
 alias pip3id="pip3 install -i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com"
 
-fpath=(/usr/local/share/zsh-completions $fpath)
+export TERM=screen-256color
+# fpath=(/usr/local/share/zsh-completions $fpath)
+
 # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew/homebrew-bottles
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
-export TERM=screen-256color
-
 source /usr/local/share/autojump/autojump.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

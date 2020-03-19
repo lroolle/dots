@@ -18,35 +18,34 @@ let maplocalleader = ","
 " => https://github.com/junegunn/vim-plug 
 call plug#begin('~/.vim/plugged')
 
-
 Plug 'Chiel92/vim-autoformat'
 Plug 'thinca/vim-quickrun'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
-
-" vim -Nu path/to/visual-multi/tutorialrc
-Plug 'mg979/vim-visual-multi'
-Plug 'ybian/smartim'
-  let g:smartim_default                    = 'com.apple.keylayout.ABC'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'psf/black', { 'tag': '19.10b0' }
-  " Format full current file
-  map <c-s-b> :!black %:p<CR>
+Plug 'ybian/smartim'
+  let g:smartim_default = 'com.apple.keylayout.ABC'
 Plug 'roman/golden-ratio'
   " Exclude NERDTree/TagBar
   let g:golden_ratio_exclude_nonmodifiable = 1
+
+" TODO: CtrlN(one and only useful)
+" Plug 'mg979/vim-visual-multi'
 
 " preservim/nerdcommenter {{{ 
 Plug 'preservim/nerdcommenter'
   let g:NERDDefaultAlign    = 'left'
   let g:NERDCompactSexyComs = 1
   let g:NERDSpaceDelims     = 1
+  " ctrl-/ to toggle comment
   map <c-_> <plug>NERDCommenterToggle
 " END preservim/nerdcommenter }}}
 
 " junegunn/vim-easy-align {{{
 Plug 'junegunn/vim-easy-align'
-  " let g:easy_align_ignore_groups = ['Comment', 'String']
   xmap ga <plug>(EasyAlign)
   nmap ga <plug>(EasyAlign)
 " END junegunn/vim-easy-align }}}
@@ -101,8 +100,8 @@ Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " NERDTree {{{
 Plug 'scrooloose/nerdtree'
   let g:NERDTreeWinPos             = "right"
-  let NERDTreeShowHidden           = 0
-  let NERDTreeIgnore               = ['\.pyc$', '__pycache__']
+  let g:NERDTreeShowHidden         = 1
+  let g:NERDTreeIgnore             = ['\.pyc$', '__pycache__']
   let g:NERDTreeWinSize            = 35
   let g:NERDTreeMapJumpNextSibling = ''
   let g:NERDTreeMapJumpPrevSibling = ''
@@ -122,8 +121,10 @@ Plug 'majutsushi/tagbar'
 " Airline {{{
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-  let g:airline#extensions#ale#enabled          = 1
-  let g:airline#extensions#tabline#enabled      = 1
+  let g:airline#extensions#ale#enabled     = 1
+  let g:airline#extensions#tabline#enabled = 1
+  let g:ale_list_window_size               = 4
+  let g:ale_echo_msg_format                = '[%linter%]%code%:%s'
 " END Airline }}} 
 
 " ALE {{{
@@ -139,6 +140,7 @@ Plug 'dense-analysis/ale'
 
 " YCM {{{
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }
+  let g:ycm_python_binary_path                            = 'python3' 
   let g:ycm_collect_identifiers_from_tags_files           = 1
   let g:ycm_seed_identifiers_with_syntax                  = 1
   let g:ycm_complete_in_comments                          = 1
@@ -155,7 +157,6 @@ Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }
   nnoremap <leader>i : YcmCompleter GoToDefinitionElseDeclaration<CR>
   nnoremap <leader>; : YcmCompleter GoToReferences<CR>
   " END YCM }}}
-
 
 call plug#end()
 " END Leader & vim-plug }}}
@@ -246,7 +247,12 @@ noremap <leader>v "+p
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Windows & Tabs & Buffers {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
+" Return to last edit position when opening files
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+set hidden " You can have edited buffers that aren't visible in a window somewhere 
+" Undo when file reopen(+persistent_undo feature required)
+set undofile                  
+set undodir=$HOME/.vim/undo  " mkdir required! where the undo files to be stored
 " Easy jump between split windows 
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -257,8 +263,8 @@ map <C-l> <C-W>l
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
+" Opens a new tab with the current buffer's path
+map <leader>te :tabedit <C-r> = expand("%:p:h")<cr>/
 
 " Fast choose tab 
 nnoremap <leader>1 1gt
@@ -267,24 +273,15 @@ nnoremap <leader>3 3gt
 nnoremap <leader>4 4gt
 nnoremap <leader>5 5gt
 nnoremap <leader>6 6gt
-"nnoremap <leader>7 7gt
-"nnoremap <leader>8 8gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
 "nnoremap <leader>9 9gt
-
-" You can have edited buffers that aren't visible in a window somewhere 
-set hidden
-" Return to last edit position when opening files
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " Work perfect with airline buffer list extension
 map <leader>l :bnext<cr>
 map <leader>h :bprevious<cr>
-
 " Switch CWD of the opened buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
-
-" Opens a new tab with the current buffer's path
-map <leader>te :tabedit <C-r> = expand("%:p:h")<cr>/
 " END Windows & Tabs & Buffers }}}
 
 
@@ -307,10 +304,36 @@ hi ColorColumn ctermbg=234 guibg=lightgrey
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 3). Extend {{{
+" 3). Filetypes {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Python section {{{
+let python_highlight_all = 1
+autocmd BufWritePre *.py execute ':Black'
+au BufNewFile,BufRead *.py set foldmethod=indent
+au BufNewFile,BufRead *.py set foldlevel=4
+au FileType python  noremap <buffer> ;c /class<CR>
+au FileType python  noremap <buffer> ;d /def<CR>
+au FileType python  noremap <buffer> ;C ?class<CR>
+au FileType python  noremap <buffer> ;D ?def<CR>
+au FileType python inoremap <buffer> ;i import 
+au FileType python inoremap <buffer> ;p print()<Esc>i
+au FileType python inoremap <buffer> ;c class :<Esc>i
+au FileType python inoremap <buffer> ;d def (): <Esc>2hi
+au FileType python inoremap <buffer> ;r return 
+au FileType python inoremap <buffer> ;' """  <CR>"""<Esc>ka 
+" END Python section }}}
+
+" Markdown
+let vim_markdown_folding_disabled = 1
+
+" END 3). Filetypes }}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 4). Extend {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" TMUX: allows cursor change in tmux mode
+" TMUX: allows cursor change in tmux mode {{{
 if exists('$TMUX')
     let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
     let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
@@ -318,13 +341,13 @@ else
     let &t_SI = "\<Esc>]50;CursorShape=1\x7"
     let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
+" END Tmux cursor change }}}
 
-
-" END Extended }}}
+" END 4). Extended }}}
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 4). Plays & Tricks {{{ 
+" 5). Plays & Tricks {{{ 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Reverse selected text
@@ -373,7 +396,7 @@ function! s:ToggleNERDTreeAndTagbar()
         let b:NERDTreeAndTagbar_come_back_to_me = 1
 
         " open tagbar as split of nerdtree window
-        "TagbarOpen |
+        " TagbarOpen |
         NERDTree | TagbarOpen
 
         " go back to initial buffer
@@ -392,9 +415,7 @@ command! -nargs=0 ToggleNERDTreeAndTagbar :call s:ToggleNERDTreeAndTagbar()
 map <leader>nt :ToggleNERDTreeAndTagbar<CR>
 " END NERDTreeToggle with TagbarToggle }}}
 
+" END 5). Plays & Tricks }}}
 
 
-" END Plays & Tricks }}}
-
-
-" vim: set foldmethod=marker:
+" vim: set foldmethod=marker foldlevel=1 nomodeline:
