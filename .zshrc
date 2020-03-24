@@ -105,6 +105,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias pip3id="pip3 install -i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com"
+alias python="python3" 
+alias pythonm="python3 -m"
 
 export TERM=screen-256color
 # fpath=(/usr/local/share/zsh-completions $fpath)
