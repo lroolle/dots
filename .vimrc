@@ -21,17 +21,18 @@ call plug#begin('~/.vim/plugged')
 " TODO: CtrlN(one and only useful)
 " Plug 'mg979/vim-visual-multi' " Too fucking much shortcuts for god
 
-Plug 'Chiel92/vim-autoformat'
 Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'psf/black'
 Plug 'tyru/open-browser.vim'
+Plug 'Chiel92/vim-autoformat'
+Plug 'mattn/emmet-vim'
+Plug 'posva/vim-vue'
 Plug 'ybian/smartim'
-  " {{{
+" {{{
   let g:smartim_default = 'com.apple.keylayout.ABC'
 " }}}
 
@@ -44,6 +45,12 @@ Plug 'thinca/vim-quickrun'
 	      \ 'outputter': 'browser'
 	      \ }
 " }}}
+
+Plug 'maxbrunsfeld/vim-yankstack'
+"{{{ 
+  nmap <leader>p <Plug>yankstack_substitude_older_paste
+  nmap <leader>P <Plug>yankstack_substitude_newer_paste
+"}}}
 
 Plug 'roman/golden-ratio'
   " {{{ Exclude NERDTree/TagBar
@@ -67,6 +74,7 @@ Plug 'junegunn/vim-easy-align'
 
 Plug 'ludovicchabant/vim-gutentags'
 " vim-gutentags: ctags & gtags management {{{
+  let g:gutentags_trace                  = 0 
   let g:gutentags_project_root           = ['.root', '.svn', '.git', '.hg', '.project']
   let g:gutentags_ctags_tagfile          = '.tags'
   " work with ctags & gtags both
@@ -86,12 +94,66 @@ Plug 'ludovicchabant/vim-gutentags'
   " Add when using universal-ctags
   let g:gutentags_ctags_extra_args      += ['--output-format=e-ctags']
   let g:gutentags_auto_add_gtags_cscope  = 0
+  let g:gutentags_gtags_exclude = [
+      \ '*.git', '*.svg', '*.hg',
+      \ '*/tests/*',
+      \ 'build',
+      \ 'dist',
+      \ '*sites/*/files/*',
+      \ 'bin',
+      \ 'node_modules',
+      \]
+  let g:gutentags_ctags_exclude = [
+      \ '*.git', '*.svg', '*.hg',
+      \ '*/tests/*',
+      \ 'build',
+      \ 'dist',
+      \ '*sites/*/files/*',
+      \ 'bin',
+      \ 'node_modules',
+      \ 'bower_components',
+      \ 'cache',
+      \ 'compiled',
+      \ 'bundle',
+      \ 'vendor',
+      \ '*.md',
+      \ '*-lock.json',
+      \ '*.lock',
+      \ '*bundle*.js',
+      \ '*build*.js',
+      \ '.*rc*',
+      \ '*.json',
+      \ '*.min.*',
+      \ '*.map',
+      \ '*.bak',
+      \ '*.zip',
+      \ '*.pyc',
+      \ '*.class',
+      \ '*.sln',
+      \ '*.Master',
+      \ '*.csproj',
+      \ '*.tmp',
+      \ '*.csproj.user',
+      \ '*.cache',
+      \ '*.pdb',
+      \ 'tags*',
+      \ 'cscope.*',
+      \ '*.css',
+      \ '*.less',
+      \ '*.scss',
+      \ '*.exe', '*.dll',
+      \ '*.mp3', '*.ogg', '*.flac',
+      \ '*.swp', '*.swo',
+      \ '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png',
+      \ '*.rar', '*.zip', '*.tar', '*.tar.gz', '*.tar.xz', '*.tar.bz2',
+      \ '*.pdf', '*.doc', '*.docx', '*.ppt', '*.pptx',
+      \ ]
 " END ludovicchabant/vim-gutentags }}}
 
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " LeaderF {{{
-  let g:Lf_WindowPosition        = 'popup'
-  let g:Lf_PreviewInPopup        = 1
+  " let g:Lf_WindowPosition        = 'popup'
+  " let g:Lf_PreviewInPopup        = 1
   " search visually selected text literally
   let g:Lf_RgConfig              = [
         \ "--max-columns=150",
@@ -114,14 +176,13 @@ Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 
 Plug 'scrooloose/nerdtree'
 " NERDTree {{{
-  let g:NERDTreeWinPos             = "right"
+  let g:NERDTreeWinPos             = "left"
   let g:NERDTreeShowHidden         = 1
   let g:NERDTreeIgnore             = ['\.pyc$', '__pycache__']
   let g:NERDTreeWinSize            = 35
   let g:NERDTreeMapJumpNextSibling = ''
   let g:NERDTreeMapJumpPrevSibling = ''
   map <leader>nn :NERDTreeToggle<cr>
-  map <leader>nf :NERDTreeFind<cr>
 " END NERDTree }}}
 
 Plug 'majutsushi/tagbar'
@@ -138,12 +199,22 @@ Plug 'dense-analysis/ale'
   let g:ale_hover_to_preview = 1
   let g:ale_echo_msg_format  = '[%linter%]%code%:%s'
   let g:ale_linters          = {
-  \   'javascript': ['jshint'],
-  \   'python': ['pyflakes', 'pylint'],
-  \   'go': ['go', 'golint', 'errcheck']
+    \ 'javascript': ['eslint'],
+    \ 'vue': ['eslint'],
+    \ 'html': ['eslint'],
+    \ 'python': ['pyflakes', 'pylint'],
+    \ 'go': ['go', 'golint', 'errcheck']
   \}
+  let g:ale_fixers           = {
+    \ 'javascript': ['prettier', 'eslint'],
+    \ 'html': ['prettier', 'eslint'],
+    \ 'vue': ['prettier', 'eslint'],
+    \ 'python': ['black']
+    \ }
+  let g:ale_fix_on_save = 1
   nmap <silent> <leader>a <Plug>(ale_next_wrap)
 " END ALE }}}
+
 
 Plug 'vim-airline/vim-airline'
 " Airline {{{
@@ -152,6 +223,7 @@ Plug 'vim-airline/vim-airline'
 " END Airline }}}
 
 Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }
+Plug 'ycm-core/lsp-examples'
 " YCM {{{
   let g:ycm_python_binary_path                            = 'python3'
   let g:ycm_collect_identifiers_from_tags_files           = 1
@@ -166,6 +238,32 @@ Plug 'ycm-core/YouCompleteMe', { 'do': './install.py --all' }
   let g:ycm_goto_buffer_command                           = 'vertical-split'
   let g:ycm_python_binary_path                            = 'python'
   let g:ycm_filetype_blacklist                            = {'unite': 1, 'tagbar': 1, 'pandoc': 1, 'qf': 1, 'infolog': 1, }
+  " YCMD language servers config 
+  let s:lsp = '$HOME/.vim/plugged/lsp-examples'
+  let g:ycm_language_server = [
+    \   {
+    \     'name': 'yaml',
+    \     'cmdline': [ 'node', expand( s:lsp . '/yaml/node_modules/.bin/yaml-language-server' ), '--stdio' ],
+    \     'filetypes': [ 'yaml' ],
+    \   },
+    \   {
+    \     'name': 'json',
+    \     'cmdline': [ 'node', expand( s:lsp . '/json/node_modules/.bin/vscode-json-languageserver' ), '--stdio' ],
+    \     'filetypes': [ 'json' ],
+    \   },
+    \   { 'name': 'vue',
+    \     'filetypes': [ 'vue' ], 
+    \     'cmdline': [ expand( s:lsp . '/vue/node_modules/.bin/vls' ) ]
+    \   },
+    \   { 'name': 'docker',
+    \     'filetypes': [ 'dockerfile' ], 
+    \     'cmdline': [ expand( s:lsp . '/docker/node_modules/.bin/docker-langserver' ), '--stdio' ]
+    \   },
+    \   { 'name': 'vim',
+    \     'filetypes': [ 'vim' ],
+    \     'cmdline': [ expand( s:lsp . '/viml/node_modules/.bin/vim-language-server' ), '--stdio' ]
+    \   },
+    \ ]
   nnoremap <leader>] : YcmCompleter GoTo<CR>
   nnoremap <leader>i : YcmCompleter GoToDefinitionElseDeclaration<CR>
   nnoremap <leader>; : YcmCompleter GoToReferences<CR>
@@ -187,6 +285,7 @@ set history=1000
 set nobackup
 set nowb
 set noswapfile
+set relativenumber
 
 syntax   on
 filetype plugin on
@@ -197,7 +296,7 @@ map <leader>w :w!<cr>
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 " Fast .vimrc Edit && Source
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>rv :source $MYVIMRC<cr>
 " Fast Esc, and :
 inoremap jk <Esc>
 map <space> :
@@ -208,7 +307,7 @@ set incsearch
 set smartcase
 set ignorecase
 " Unhighlight searched
-map <silent> <leader><cr> :noh<cr>
+map <silent> <cr> :noh<cr>
 
 " Press <Tab> to show more above the command line
 set wildmenu
@@ -241,7 +340,7 @@ set so=7
 
 set foldenable
 set foldnestmax=10
-set foldlevelstart=1
+set foldlevelstart=2
 
 set noerrorbells
 set novisualbell
@@ -338,9 +437,8 @@ hi ColorColumn ctermbg=234 guibg=lightgrey
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 3). Filetypes {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Python section {{{
+" => Python section {{{
 let python_highlight_all = 1
-autocmd BufWritePre *.py execute ':Black'
 au BufNewFile,BufRead *.py set foldmethod=indent
 au BufNewFile,BufRead *.py set foldlevel=4
 " Fast seacrh calss, def, print...
@@ -359,8 +457,51 @@ au FileType python inoremap <buffer> ;r return
 au FileType python inoremap <buffer> ;' """  <CR>"""<Esc>ka
 " END Python section }}}
 
-" Markdown
+" => JavaScript/HTML/Vue section {{{
+" au BufRead,BufNewFile *.vue set filetype=javascript
+
+au FileType vue setlocal fdm=indent
+au FileType vue setlocal shiftwidth=2
+au FileType vue setlocal tabstop=2
+au FileType vue setlocal softtabstop=2
+
+au FileType html setlocal fdm=indent
+au FileType html setlocal shiftwidth=2
+au FileType html setlocal tabstop=2
+au FileType html setlocal softtabstop=2
+
+au FileType scss setlocal fdm=indent
+au FileType scss setlocal shiftwidth=2
+au FileType scss setlocal tabstop=2
+au FileType scss setlocal softtabstop=2
+
+au FileType javascript setlocal shiftwidth=2
+au FileType javascript setlocal tabstop=2
+au FileType javascript setlocal softtabstop=2
+au FileType javascript call JavaScriptFold()
+au FileType javascript setl fen
+au FileType javascript setl nocindent
+
+function! JavaScriptFold() 
+    setl foldmethod=syntax
+    setl foldlevelstart=1
+    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
+
+    function! FoldText()
+        return substitute(getline(v:foldstart), '{.*', '{...}', '')
+    endfunction
+    setl foldtext=FoldText()
+endfunction
+" END JavaScript section }}}
+
+" => Markdown section {{{
 let vim_markdown_folding_disabled = 1
+" type ;c(code)
+au FileType markdown inoremap <buffer> ;c ``<Esc>i
+" type ;cb(code block)
+au FileType markdown inoremap <buffer> ;cb ```<CR>```<Esc>ka
+" au FileType markdown inoremap <buffer> ;t |||<CR>|-|-|<CR>|||<Esc>2khi
+" END Markdown section }}}
 
 " END 3). Filetypes }}}
 
@@ -454,6 +595,7 @@ endfunction
 command! -nargs=0 ToggleNERDTreeAndTagbar :call s:ToggleNERDTreeAndTagbar()
 map <leader>nt :ToggleNERDTreeAndTagbar<CR>
 " END NERDTreeToggle with TagbarToggle }}}
+
 
 " END 5). Plays & Tricks }}}
 

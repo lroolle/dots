@@ -1,5 +1,9 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.npm-global/bin:$PATH
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/eric/.oh-my-zsh"
@@ -83,7 +87,8 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -104,8 +109,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias pip3id="pip3 install -i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com"
-alias python="python3" 
 alias pythonm="python3 -m"
 
 export TERM=screen-256color
@@ -115,3 +118,6 @@ export TERM=screen-256color
 export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 source /usr/local/share/autojump/autojump.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Created by `userpath` on 2020-04-27 06:39:58
+export PATH="$PATH:/Users/eric/.local/bin"
