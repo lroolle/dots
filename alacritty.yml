@@ -81,7 +81,7 @@ window:
 #scrolling:
   # Maximum number of lines in the scrollback buffer.
   # Specifying '0' will disable scrolling.
-  history: 10000
+history: 10000
 
   # Number of lines the viewport will move for every line scrolled when
   # scrollback is enabled (history > 0).
@@ -110,6 +110,7 @@ font:
     #   - (Linux) monospace
     #   - (Windows) Consolas
     family: Courier
+    weight: -1 
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -120,7 +121,8 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Courier 
+    family: Courier
+    style: Bold
 
     # The `style` can be specified to pick a specific face.
     #style: Bold
@@ -131,21 +133,22 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: Courier 
+    family: Courier
+    style: Italic
 
     # The `style` can be specified to pick a specific face.
     #style: Italic
 
   # Bold italic font face
-  #bold_italic:
+  bold_italic:
     # Font family
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    family: CourierPrime 
 
     # The `style` can be specified to pick a specific face.
-    #style: Bold Italic
+    style: Bold Italic
 
   # Point size
   size: 20.0
@@ -180,7 +183,7 @@ font:
   use_thin_strokes: true
 
 # If `true`, bold text is drawn using the bright color variants.
-draw_bold_text_with_bright_colors: true
+# draw_bold_text_with_bright_colors: true
 
 # Colors (Solarized Dark)
 colors:
@@ -341,10 +344,10 @@ colors:
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-#visual_bell:
-#  animation: EaseOutExpo
-#  duration: 0
-#  color: '0xffffff'
+bell:
+ animation: EaseOutExpo
+ duration: 0
+ color: '0xffffff'
 
 # Background opacity
 #
@@ -359,7 +362,7 @@ colors:
 save_to_clipboard: false 
 
 # Allow terminal applications to change Alacritty's window title.
-#dynamic_title: true
+window.dynamic_title: true
 
 cursor:
   # Cursor style
@@ -369,6 +372,7 @@ cursor:
   #   - _ Underline
   #   - | Beam
   style: Block
+
 
   # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
@@ -604,28 +608,37 @@ key_bindings:
   #- { key: Return,   mods: Alt,           action: ToggleFullscreen }
 
   # (macOS only)
-  # - { key: Key0,   mods: Command,         action: ResetFontSize         }
-  # - { key: Equals, mods: Command,         action: IncreaseFontSize      }
-  # - { key: Add,    mods: Command,         action: IncreaseFontSize      }
-  # - { key: Minus,  mods: Command,         action: DecreaseFontSize      }
-  # - { key: K,      mods: Command,         action: ClearHistory          }
-  # - { key: K,      mods: Command,         chars: "\x0c"                 }
-  # - { key: V,      mods: Command,         action: Paste                 }
-  # - { key: C,      mods: Command,         action: Copy                  }
-  # - { key: H,      mods: Command,         action: Hide                  }
-  # - { key: Q,      mods: Command,         action: Quit                  }
-  # - { key: W,      mods: Command,         action: Quit                  }
-  # - { key: F,      mods: Command|Control, action: ToggleFullscreen      }
-  # - { key: Paste,                    action: Paste                      }
-  # - { key: Copy,                     action: Copy                       }
-  # - { key: L,         mods: Control, action: ClearLogNotice             }
-  # - { key: L,         mods: Control, chars: "\x0c"                      }
-  - { key: PageUp,    mods: Shift,   action: ScrollPageUp,   mode: ~Alt }
-  # - { key: PageDown,  mods: Shift,   action: ScrollPageDown, mode: ~Alt }
-  # - { key: Home,      mods: Shift,   action: ScrollToTop,    mode: ~Alt }
+  - { key: Key0,   mods: Command,         action: ResetFontSize         }
+  - { key: Equals, mods: Command,         action: IncreaseFontSize      }
+  - { key: Add,    mods: Command,         action: IncreaseFontSize      }
+  - { key: Minus,  mods: Command,         action: DecreaseFontSize      }
+  - { key: V,      mods: Command,         action: Paste                 }
+  - { key: C,      mods: Command,         action: Copy                  }
+  - { key: H,      mods: Command,         action: Hide                  }
+  - { key: Q,      mods: Command,         action: Quit                  }
+  - { key: W,      mods: Command,         action: Quit                  }
+  - { key: F,      mods: Command|Control, action: ToggleSimpleFullscreen}
+  - { key: Paste,                    action: Paste                      }
+  - { key: Copy,                     action: Copy                       }
+  - { key: L,         mods: Control, action: ClearLogNotice             }
+  - { key: L,         mods: Control, chars: "\x0c"                      }
+  - { key: PageUp,    action: ScrollPageUp,   mode: ~Alt }
+  - { key: PageDown,  action: ScrollPageDown, mode: ~Alt }
+  - { key: Home,      mods: Shift,   action: ScrollToTop,    mode: ~Alt }
   # - { key: End,       mods: Shift,   action: ScrollToBottom, mode: ~Alt }
   
-  - { key: Slash,   mods: Control,       chars: "\x1f"              }
-  - { key: N,         mods: Command,      action: SpawnNewInstance  }
-  - { key: Delete,                        chars: "\x1b[3~"                     }
-  - { key: K, mods: Command, chars: "\x08K" }
+  - { key: Slash,     mods: Control,      chars: "\x1f"            }
+  - { key: Delete,                        chars: "\x1b[3~"         }
+  - { key: Delete, mods: Alt,             chars: "\x1bD"           }
+  - { key: Delete, mods: Command,             chars: "\x1bD"           }
+
+  # General Quality of Life Improvements
+  #- { key: Comma,     mods: Command,      command:
+  #    {program: "vim", args: ["~/.config/alacritty/alacritty.yml"]}     }
+  - { key: N,        mods: Command,      action: SpawnNewInstance       }
+  # - { key: Space,  mods: Alt,          chars: " "                     }
+  - { key: Back,     mods: Super,   chars: "\x15"                        } # delete word/line
+  # - { key: Left,     mods: Alt,     chars: "\x1bb"                       } # one word left
+  # - { key: Right,    mods: Alt,     chars: "\x1bf"                       } # one word right
+  # - { key: Left,     mods: Command, chars: "\x1bOH",   mode: AppCursor   } # Home
+  # - { key: Right,    mods: Command, chars: "\x1bOF",   mode: AppCursor   } # End

@@ -1,9 +1,11 @@
-# If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$HOME/.npm-global/bin:$PATH
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export LC_CTYPE=en_US.UTF-8
+# If you come from bash you might have to change your $PATH.
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/eric/.oh-my-zsh"
@@ -12,7 +14,7 @@ export ZSH="/Users/eric/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="random"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -43,7 +45,7 @@ ZSH_THEME="random"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -63,6 +65,7 @@ ZSH_THEME="random"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
+HISTSIZE=10000
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -76,7 +79,7 @@ ZSH_THEME="random"
 # zsh-completions: https://github.com/zsh-users/zsh-completions
 plugins=(
     git
-    zsh-completions
+    #zsh-completions
 )
 autoload -U compinit && compinit
 
@@ -89,7 +92,9 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
 
+export TERM=screen-256color
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
@@ -108,16 +113,61 @@ export LC_ALL=en_US.UTF-8
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+# alias mit-scheme="/Applications/MIT-Scheme.app/Contents/Resources/mit-scheme"
+
+alias q="exit"
+alias rm="rmtrash"
+alias ggdb="/usr/local/Cellar/gdb/9.2/bin/gdb"
+
+# Set Proxy
+alias proxy="export http_proxy=http://127.0.0.1:7890 && export https_proxy=http://127.0.0.1:7890 && export all_proxy=http://127.0.0.1:7890 && echo 'Exported Proxy As: 127.0.0.1:7890'"
+
+# UnSet Proxy
+alias uproxy="unset http_proxy && unset https_proxy && unset all_proxy"
+# What Proxy
+alias wproxy="echo $http_proxy && echo $https_proxy && echo $all_proxy"
 
 alias pythonm="python3 -m"
+# Django Admin
+alias pm="python manage.py "
+alias pmms="python manage.py makemigrations"
+alias pmm="python manage.py migrate"
+alias pmrs="python manage.py runserver"
+alias pms="python manage.py shell"
+# Pipenv
+alias pes="pipenv shell"
+alias peg="pipenv graph"
+alias pei="pipenv install "
+alias peid="pipenv install --dev "
+alias perm="pipenv --rm"
 
-export TERM=screen-256color
-# fpath=(/usr/local/share/zsh-completions $fpath)
 
-# export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew/homebrew-bottles
-export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+# Autojump
 source /usr/local/share/autojump/autojump.zsh
+
+# Fuzzy find
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# The fuck
+eval $(thefuck --alias ff )
+
 # Created by `userpath` on 2020-04-27 06:39:58
-export PATH="$PATH:/Users/eric/.local/bin"
+# export PATH="$PATH:/Users/eric/.local/bin"
+
+# Pyenv
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+export PYTHON_CONFIGURE_OPTS="--enable-framework"
+
+# Go version manager https://github.com/moovweb/gvm
+[[ -s "/Users/eric/.gvm/scripts/gvm" ]] && source "/Users/eric/.gvm/scripts/gvm"
+export GVM_ROOT=/Users/eric/.gvm
+. $GVM_ROOT/scripts/gvm-default
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+#  Glasgow Haskell Compiler
+[ -f "/Users/eric/.ghcup/env" ] && source "/Users/eric/.ghcup/env" # ghcup-env
